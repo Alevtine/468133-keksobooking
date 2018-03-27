@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [alevtine](https://up.htmlacademy.ru/javascript/13/user/468133).
-* Наставник: `Неизвестно`.
+* Наставник: `Константин Мамаев`.
 
 ---
 
