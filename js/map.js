@@ -49,10 +49,15 @@ var makeRandomFromRange = function (min, max) {
   return Math.floor(Math.random() * (max + 1 - min));
 };
 
-/*
-var func = function() {
-  return Math.random() * 2 - 1
-}*/
+var shuffle = function (array) {
+  for (var i = 0; i < array.length; i++) {
+    var swapIdx = Math.floor(Math.random() * array.length);
+    var tmp = array[swapIdx];
+    array[swapIdx] = array[i];
+    array[i] = tmp;
+  }
+  return array;
+};
 
 var adverts = [];
 
@@ -66,17 +71,17 @@ for (var i = 0; i < advertsQuantity; i++) {
       avatar: offerAvatars[i]
     },
     offer: {
-      title: offerTitles[makeRandomFromRange(1,offerTitles.length)],
+      title: offerTitles[makeRandomFromRange(1, offerTitles.length)],
       address: addressCoordinates,
       price: makeRandomFromRange(PRICE_MINIMUM, PRICE_MAXIMUM),
-      type: offerTypes[makeRandomFromRange(1,offerTypes.length)],
-      rooms: makeRandomFromRange(1,ROOMS_QUANTITY),
-      guests: makeRandomFromRange(1,GUESTS_QUANTITY),
-      checkin: checkTimes[makeRandomFromRange(1,checkTimes.length)],
-      checkout: checkTimes[makeRandomFromRange(1,checkTimes.length)],
-      features: offerFeatures.slice(makeRandomFromRange(0,offerFeatures.length-1)),
+      type: offerTypes[makeRandomFromRange(1, offerTypes.length)],
+      rooms: makeRandomFromRange(1, ROOMS_QUANTITY),
+      guests: makeRandomFromRange(1, GUESTS_QUANTITY),
+      checkin: checkTimes[makeRandomFromRange(1, checkTimes.length)],
+      checkout: checkTimes[makeRandomFromRange(1, checkTimes.length)],
+      features: offerFeatures.slice(makeRandomFromRange(0, offerFeatures.lengt - 1)),
       description: ' ',
-      photos: offerPhotos.sort(() => Math.random() * 2 - 1),
+      photos: shuffle(offerPhotos)
     },
     location: {
       x: addressX,
@@ -112,8 +117,8 @@ var drawPin = function () {
 drawPin();
 
 var cardTemplate = document.querySelector('template').content.querySelector('.map__card');
-var cardsBlock = document.querySelector('.map');
-//var cardFragment = document.createDocumentFragment();
+// var cardsBlock = document.querySelector('.map');
+// var cardFragment = document.createDocumentFragment();
 
 var addCard = function (advert) {
   var cardElement = cardTemplate.cloneNode(true);
@@ -147,10 +152,10 @@ var addCard = function (advert) {
   userPic.src = advert.author.avatar;
 
   document.querySelector('.map__filters-container').insertAdjacentElement('beforeBegin', cardElement);
-  //cardsBlock.appendChild(cardElement);
-  //document.querySelector('.map__pins').insertAdjacentElement('afterEnd', cardElement);
-  //document.querySelector('.map__pins').after(cardElement);
-  //document.querySelector('.map__filters-container').before(cardElement);
+  // cardsBlock.appendChild(cardElement);
+  // document.querySelector('.map__pins').insertAdjacentElement('afterEnd', cardElement);
+  // document.querySelector('.map__pins').after(cardElement);
+  // document.querySelector('.map__filters-container').before(cardElement);
   return cardElement;
 };
 
