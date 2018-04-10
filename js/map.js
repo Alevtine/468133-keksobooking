@@ -46,7 +46,7 @@ var offerPhotos = [
 
 
 var makeRandomFromRange = function (min, max) {
-    return Math.floor(Math.random() * (max + 1 - min) + min);
+  return Math.floor(Math.random() * (max + 1 - min) + min);
 };
 
 var shuffle = function (array) {
@@ -71,14 +71,14 @@ for (var i = 0; i < advertsQuantity; i++) {
       avatar: offerAvatars[i]
     },
     offer: {
-      title: offerTitles[makeRandomFromRange(1, offerTitles.length)],
+      title: offerTitles[makeRandomFromRange(0, offerTitles.length - 1)],
       address: addressCoordinates,
       price: makeRandomFromRange(PRICE_MINIMUM, PRICE_MAXIMUM),
-      type: offerTypes[makeRandomFromRange(1, offerTypes.length)],
+      type: offerTypes[makeRandomFromRange(0, offerTypes.length - 1)],
       rooms: makeRandomFromRange(1, ROOMS_QUANTITY),
       guests: makeRandomFromRange(1, GUESTS_QUANTITY),
-      checkin: checkTimes[makeRandomFromRange(1, checkTimes.length)],
-      checkout: checkTimes[makeRandomFromRange(1, checkTimes.length)],
+      checkin: checkTimes[makeRandomFromRange(0, checkTimes.length - 1)],
+      checkout: checkTimes[makeRandomFromRange(0, checkTimes.length - 1)],
       features: shuffle(offerFeatures).slice(makeRandomFromRange(0, offerFeatures.length - 1)),
       description: ' ',
       photos: shuffle(offerPhotos)
@@ -136,33 +136,47 @@ var addCard = function (pin) {
   }
   cardElement.querySelector('.popup__text--capacity').textContent = pin.offer.rooms + ' комнаты для ' + pin.offer.guests + ' гостей';
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + pin.offer.checkin + ', ' + 'выезд до ' + pin.offer.checkout;
-
   cardElement.querySelector('.popup__description').textContent = pin.offer.description;
 
-// поменять
-  var featuresList = cardElement.querySelector('.popup__features');
-  var featureElement = featuresList.querySelector('li');
-  for (var i=0; i<offerFeatures.length; i++) {
-  featureElement.className = 'popup__feature popup__feature--' + offerFeatures[makeRandomFromRange(0,offerFeatures.length)];
-  }
+
+  var addFeaturesInCard = function () {
+    // очистить существующие фичи в склонированном шаблоне
+    // Взять сгенерированные фичи из переданной переменной pin: pin.features
+    // добавтить в цикле все pin.features
+
+    var featuresList = cardElement.querySelector('.popup__features');
+    function removeChildren() {
+      featuresList.innerHTML = '';
+    }
+    removeChildren();
+
+    var featureTemplate = document.querySelector('template').content.querySelector('.popup__feature');
+
+    for (var a = 0; a < pin.offer.features.length; a++) {
+      var featureElement = featureTemplate.cloneNode(true);
+      featureElement.className = 'popup__feature popup__feature--' + pin.offer.features[a];
+      featuresList.appendChild(featureElement);
+    }
+  };
+  addFeaturesInCard();
 
   var addPhotosInCard = function (photosArr) {
     var photosList = cardElement.querySelector('.popup__photos');
     var photoElement = photosList.querySelector('img');
-    for (var i = 0; i < photosArr.length; i++) {
+    for (var j = 0; j < photosArr.length; j++) {
       photoElement = photoElement.cloneNode(true);
-      photoElement.src = photosArr[i];
+      photoElement.src = photosArr[j];
       photosList.appendChild(photoElement);
     }
     photosList.firstElementChild.remove(photosList);
     return photosList;
   };
-    addPhotosInCard(offerPhotos);
+  addPhotosInCard(offerPhotos);
 
   cardElement.querySelector('img').setAttribute('src', pin.author.avatar);
 
-
   document.querySelector('.map__filters-container').insertAdjacentElement('beforeBegin', cardElement);
+
   return cardElement;
 };
 
