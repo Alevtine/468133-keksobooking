@@ -173,7 +173,7 @@ var addCard = function (pin) {
   };
   addPhotosInCard(offerPhotos);
 
-  cardElement.querySelector('img').setAttribute('src', pin.author.avatar);
+  cardElement.querySelector('img').src = pin.author.avatar;
 
   document.querySelector('.map__filters-container').insertAdjacentElement('beforeBegin', cardElement);
 
