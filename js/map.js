@@ -172,7 +172,6 @@ drawPins(adverts);
 drawCard(adverts[0]);
 
 
-
 // module4-task1
 // Обработчик события mouseup должен вызывать функцию,
 // которая будет отменять изменения DOM-элементов, описанные в пункте «Неактивное состояние» технического задания.
@@ -183,50 +182,48 @@ for (var i = 0; i < pins.length; i++) {
 }
 
 var fields = document.querySelector('.ad-form').querySelectorAll('fieldset');
-for (var i = 0; i < fields.length; i++) {
-  fields[i].disabled = 'disabled';
+for (var j = 0; j < fields.length; j++) {
+  fields[j].disabled = 'disabled';
 }
 
 var pinMain = document.querySelector('.map__pin--main');
 document.querySelector('#address').value = getCoords(pinMain).top + ', ' + getCoords(pinMain).left;
 
-var turnActive = function() {
-  map.classList.remove('map--faded');
-  for (var i = 0; i < fields.length; i++) {
-    fields[i].disabled = '';
+var turnActive = function () {
+  map.classList.remove('m  ap--faded');
+  for (var t = 0; t < fields.length; t++) {
+    fields[t].disabled = '';
   }
 
-  for (var i = 0; i < pins.length; i++) {
-    pins[i].classList.remove('hidden');
+  for (var a = 0; a < pins.length; a++) {
+    pins[a].classList.remove('hidden');
   }
 
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   document.querySelector('#address').value = getCoords(pinMain).top + ', ' + getCoords(pinMain).left;
 
-}
+};
 
 pinMain.addEventListener('mouseup', turnActive);
 
 var cards = map.querySelectorAll('.map__card');
 
-
-for (var i = 0; i < pins.length; i++) {
-var onPinClickShowCard = function () {
-  for (var i = 0; i < cards.length; i++) {
-    cards[i].classList.remove('hidden');
-  }
-}
-pins[i].addEventListener('click', onPinClickShowCard);
+for (var t = 0; t < pins.length; t++) {
+  var onPinClickShowCard = function () {
+    for (var a = 0; a < cards.length; a++) {
+      cards[a].classList.remove('hidden');
+    }
+  };
+  pins[t].addEventListener('click', onPinClickShowCard);
 }
 
 var cardCloseBlock = map.querySelector('.popup__close');
-var onClickCloseCard = function() {
-for (var i = 0; i < cards.length; i++) {
-  cards[i].classList.add('hidden');
-}
-}
+var onClickCloseCard = function () {
+  for (var b = 0; b < cards.length; b++) {
+    cards[b].classList.add('hidden');
+  }
+};
 cardCloseBlock.addEventListener('click', onClickCloseCard);
-
 
 
 function getCoords(element) {
