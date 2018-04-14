@@ -190,7 +190,7 @@ var pinMain = document.querySelector('.map__pin--main');
 document.querySelector('#address').value = getCoords(pinMain).top + ', ' + getCoords(pinMain).left;
 
 var turnActive = function () {
-  map.classList.remove('m  ap--faded');
+  map.classList.remove('map--faded');
   for (var t = 0; t < fields.length; t++) {
     fields[t].disabled = '';
   }
