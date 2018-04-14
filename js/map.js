@@ -1,7 +1,5 @@
 'use strict';
-
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
 
 var ROOMS_QUANTITY = 5;
 var GUESTS_QUANTITY = 50;
@@ -166,8 +164,75 @@ var drawCard = function (advert) {
 
   cardElement.querySelector('img').src = advert.author.avatar;
   document.querySelector('.map__filters-container').insertAdjacentElement('beforeBegin', cardElement);
+  cardElement.classList.add('hidden');
 };
 
 var adverts = generateAdverts();
 drawPins(adverts);
 drawCard(adverts[0]);
+
+
+
+// module4-task1
+// Обработчик события mouseup должен вызывать функцию,
+// которая будет отменять изменения DOM-элементов, описанные в пункте «Неактивное состояние» технического задания.
+
+var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+for (var i = 0; i < pins.length; i++) {
+  pins[i].className = 'map__pin' + ' hidden';
+}
+
+var fields = document.querySelector('.ad-form').querySelectorAll('fieldset');
+for (var i = 0; i < fields.length; i++) {
+  fields[i].disabled = 'disabled';
+}
+
+var pinMain = document.querySelector('.map__pin--main');
+document.querySelector('#address').value = getCoords(pinMain).top + ', ' + getCoords(pinMain).left;
+
+var turnActive = function() {
+  map.classList.remove('map--faded');
+  for (var i = 0; i < fields.length; i++) {
+    fields[i].disabled = '';
+  }
+
+  for (var i = 0; i < pins.length; i++) {
+    pins[i].classList.remove('hidden');
+  }
+
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+  document.querySelector('#address').value = getCoords(pinMain).top + ', ' + getCoords(pinMain).left;
+
+}
+
+pinMain.addEventListener('mouseup', turnActive);
+
+var cards = map.querySelectorAll('.map__card');
+
+
+for (var i = 0; i < pins.length; i++) {
+var onPinClickShowCard = function () {
+  for (var i = 0; i < cards.length; i++) {
+    cards[i].classList.remove('hidden');
+  }
+}
+pins[i].addEventListener('click', onPinClickShowCard);
+}
+
+var cardCloseBlock = map.querySelector('.popup__close');
+var onClickCloseCard = function() {
+for (var i = 0; i < cards.length; i++) {
+  cards[i].classList.add('hidden');
+}
+}
+cardCloseBlock.addEventListener('click', onClickCloseCard);
+
+
+
+function getCoords(element) {
+  var box = element.getBoundingClientRect();
+  return {
+    left: Math.floor(box.left + pageXOffset),
+    top: Math.floor(box.top + pageYOffset)
+  };
+}
