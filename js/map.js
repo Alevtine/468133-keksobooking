@@ -97,20 +97,21 @@ var generateAdverts = function () {
 };
 
 
-var addPin = function (pin) {
+var addPin = function (pin, index) {
   var pinElement = pinTemplate.cloneNode(true);
   pinElement.style.left = pin.location.x + 'px';
   pinElement.style.top = pin.location.y + 'px';
   var imgPin = pinElement.getElementsByTagName('img');
   imgPin[0].src = pin.author.avatar;
   imgPin[0].alt = pin.offer.title;
+  pinElement.setAttribute('data-id', index);
   return pinElement;
 };
 
 var drawPins = function (adverts) {
   var pinFragment = document.createDocumentFragment();
   for (var j = 0; j < adverts.length; j++) {
-    pinFragment.appendChild(addPin(adverts[j]));
+    pinFragment.appendChild(addPin(adverts[j], j));
   }
   return pinsBlock.appendChild(pinFragment);
 };
@@ -164,13 +165,11 @@ var drawCard = function (advert) {
 
   cardElement.querySelector('img').src = advert.author.avatar;
   document.querySelector('.map__filters-container').insertAdjacentElement('beforeBegin', cardElement);
-  cardElement.classList.add('hidden');
 };
 
 var adverts = generateAdverts();
 drawPins(adverts);
-drawCard(adverts[0]);
-
+// drawCard(adverts[0]);
 
 // module4-task1
 // Обработчик события mouseup должен вызывать функцию,
@@ -206,24 +205,35 @@ var turnActive = function () {
 
 pinMain.addEventListener('mouseup', turnActive);
 
-var cards = map.querySelectorAll('.map__card');
 
-for (var t = 0; t < pins.length; t++) {
-  var onPinClickShowCard = function () {
-    for (var a = 0; a < cards.length; a++) {
-      cards[a].classList.remove('hidden');
-    }
-  };
-  pins[t].addEventListener('click', onPinClickShowCard);
-}
+// var cards = map.querySelectorAll('.map__card');
 
-var cardCloseBlock = map.querySelector('.popup__close');
-var onClickCloseCard = function () {
-  for (var b = 0; b < cards.length; b++) {
-    cards[b].classList.add('hidden');
+var onClickCloseCard = function (evt) {
+  var target = evt.target;
+  while (!target.classList.contains('map__card')) {
+    target = target.parentNode;
   }
+  target.parentNode.removeChild(target);
+  evt.stopPropagation();
 };
-cardCloseBlock.addEventListener('click', onClickCloseCard);
+
+map.addEventListener('click', function (evt) {
+  var target = evt.target;
+  while (!target.classList.contains('map')) {
+    if (target.classList.contains('map__pin') && !target.classList.contains('map__pin--main')) {
+      var mapPopupCard = map.querySelector('.map__card');
+      if (mapPopupCard) {
+        mapPopupCard.parentNode.removeChild(mapPopupCard);
+      }
+      var index = target.dataset.id;
+      drawCard(adverts[index]);
+      var cardCloseBlock = map.querySelector('.popup__close');
+      cardCloseBlock.addEventListener('click', onClickCloseCard);
+      return;
+    }
+    target = target.parentNode;
+  }
+});
 
 
 function getCoords(element) {
@@ -233,3 +243,80 @@ function getCoords(element) {
     top: Math.floor(box.top + pageYOffset)
   };
 }
+
+// m4-t2. валид.полей
+
+document.querySelector('#address').setAttribute('readonly', true);
+
+document.querySelector('#title').setAttribute('required', true);
+document.querySelector('#title').setAttribute('minlength', '30');
+document.querySelector('#title').setAttribute('maxlength', '100');
+
+document.querySelector('#price').setAttribute('required', true);
+document.querySelector('#price').setAttribute('max', '1000000');
+
+document.querySelector('form').action = 'https://js.dump.academy/keksobooking';
+
+var priceInput = document.querySelector('#price');
+var typeInput = document.querySelector('#type');
+
+typeInput.addEventListener('change', function (evt) {
+  var typeValue = evt.target.value;
+  var minValue = 0;
+  switch (typeValue) {
+    case 'palace': minValue = 10000; break;
+    case 'house': minValue = 5000; break;
+    case 'flat': minValue = 1000; break;
+    case 'bungalo': minValue = 0; break;
+  }
+  priceInput.setAttribute('min', minValue);
+  priceInput.setAttribute('placeholder', minValue);
+});
+
+var checkInInput = document.querySelector('#timein');
+var checkOutInput = document.querySelector('#timeout');
+
+checkInInput.addEventListener('change', function (evt) {
+  checkOutInput.value = evt.target.value;
+  checkOutInput.value = evt.target.value;
+});
+
+checkOutInput.addEventListener('change', function (evt) {
+  checkInInput.value = evt.target.value;
+  checkInInput.value = evt.target.value;
+});
+
+/*
+вводятся ограничения на допустимые варианты выбора количества гостей:
+1 комната — «для 1 гостя»;
+2 комнаты — «для 2 гостей» или «для 1 гостя»;
+3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»;
+100 комнат — «не для гостей»;
+*/
+
+var roomsInput = document.querySelector('#room_number');
+var guestsInput = document.querySelector('#capacity');
+
+roomsInput.addEventListener('change', function (evt) {
+  var guests = guestsInput.querySelectorAll('option');
+  for (var b = 0; b < guests.length; b++) {
+    guests[b].disabled = 'disabled';
+  }
+
+  if (evt.target.value === '1') {
+    guestsInput.querySelector('option:nth-child(3)').removeAttribute('disabled');
+  } else if (evt.target.value === '2') {
+    guestsInput.querySelector('option:nth-child(2)').removeAttribute('disabled');
+    guestsInput.querySelector('option:nth-child(3)').removeAttribute('disabled');
+  } else if (evt.target.value === '3') {
+    guestsInput.querySelector('option:nth-child(1)').removeAttribute('disabled');
+    guestsInput.querySelector('option:nth-child(2)').removeAttribute('disabled');
+    guestsInput.querySelector('option:nth-child(3)').removeAttribute('disabled');
+  } else if (evt.target.value === '100') {
+    guestsInput.querySelector('option:nth-child(4)').removeAttribute('disabled');
+  }
+});
+
+
+// пров. перед отпр. фор.
+// setCustomValidity()
