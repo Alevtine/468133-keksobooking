@@ -294,7 +294,7 @@ checkOutInput.addEventListener('change', function (evt) {
 100 комнат — «не для гостей»;
 */
 
-var form = document.querySelector('.ad-form');
+// var form = document.querySelector('.ad-form');
 
 var roomsInput = document.querySelector('#room_number');
 var guestsInput = document.querySelector('#capacity');
@@ -309,7 +309,7 @@ var onChangeRooms = function (evt) {
     guests[b].disabled = 'disabled';
   }
 
-guestsInput.value = evt.target.value;
+  guestsInput.value = evt.target.value;
   if (evt.target.value === '1') {
     guestsInput.querySelector('option:nth-child(3)').removeAttribute('disabled');
     guestsInput.setCustomValidity('Одна комната для 1 гостя');
@@ -331,7 +331,6 @@ roomsInput.addEventListener('change', onChangeRooms);
 
 // пров. перед отпр. фор.
 // setCustomValidity()
-
 
 // var submitButton = document.querySelector('.ad-form__submit');
 // submitButton.addEventListener('click', );
