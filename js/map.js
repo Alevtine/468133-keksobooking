@@ -294,29 +294,44 @@ checkOutInput.addEventListener('change', function (evt) {
 100 комнат — «не для гостей»;
 */
 
+var form = document.querySelector('.ad-form');
+
 var roomsInput = document.querySelector('#room_number');
 var guestsInput = document.querySelector('#capacity');
+guestsInput.querySelector('option:nth-child(1)').selected = '';
+guestsInput.querySelector('option:nth-child(3)').selected = 'selected';
 
-roomsInput.addEventListener('change', function (evt) {
+
+var onChangeRooms = function (evt) {
+
   var guests = guestsInput.querySelectorAll('option');
   for (var b = 0; b < guests.length; b++) {
     guests[b].disabled = 'disabled';
   }
 
+guestsInput.value = evt.target.value;
   if (evt.target.value === '1') {
     guestsInput.querySelector('option:nth-child(3)').removeAttribute('disabled');
+    guestsInput.setCustomValidity('Одна комната для 1 гостя');
   } else if (evt.target.value === '2') {
     guestsInput.querySelector('option:nth-child(2)').removeAttribute('disabled');
     guestsInput.querySelector('option:nth-child(3)').removeAttribute('disabled');
+    guestsInput.setCustomValidity('Две комнаты для 1 или 2 гостей');
   } else if (evt.target.value === '3') {
     guestsInput.querySelector('option:nth-child(1)').removeAttribute('disabled');
     guestsInput.querySelector('option:nth-child(2)').removeAttribute('disabled');
     guestsInput.querySelector('option:nth-child(3)').removeAttribute('disabled');
+    guestsInput.setCustomValidity('3 комнаты для 1, 2 или 3 гостей');
   } else if (evt.target.value === '100') {
     guestsInput.querySelector('option:nth-child(4)').removeAttribute('disabled');
+    guestsInput.setCustomValidity('Не для гостей');
   }
-});
-
+};
+roomsInput.addEventListener('change', onChangeRooms);
 
 // пров. перед отпр. фор.
 // setCustomValidity()
+
+
+// var submitButton = document.querySelector('.ad-form__submit');
+// submitButton.addEventListener('click', );
