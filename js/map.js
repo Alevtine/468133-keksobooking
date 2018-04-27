@@ -174,6 +174,10 @@ for (var j = 0; j < fields.length; j++) {
   fields[j].disabled = 'disabled';
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 401afe28b33b05560b33226ed40ad02395a079e2
 var pinMain = document.querySelector('.map__pin--main');
 var pinMainSize = 65;
 var pinMainTail = 22;
