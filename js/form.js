@@ -8,7 +8,9 @@
   var guests = guestsInput.querySelectorAll('option');
   var checkInInput = document.querySelector('#timein');
   var checkOutInput = document.querySelector('#timeout');
-  var fields = document.querySelector('.ad-form').querySelectorAll('fieldset');
+  var formAd = document.querySelector('.ad-form');
+  var fields = formAd.querySelectorAll('fieldset');
+  var successMessage = document.querySelector('.success');
 
   window.form = {
 
@@ -19,13 +21,12 @@
     },
 
     on: function () {
-      document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+      formAd.classList.remove('ad-form--disabled');
       for (var t = 0; t < fields.length; t++) {
         fields[t].disabled = '';
       }
     }
   };
-
 
   var CHANGE_ROOMS_RULES = {
     '1': ['1'],
@@ -76,4 +77,34 @@
       guestsInput.value = CHANGE_ROOMS_RULES[currentValue][0];
     }
   });
+
+  formAd.addEventListener('submit', function (evt) {
+    window.backend.sendData(new FormData(formAd),
+        function () {
+          successMessage.classList.remove('hidden');
+        },
+        function (errorMessage) {
+          var errBlock = document.createElement('div');
+          errBlock.style = 'z-index: 1; background-color: pink;';
+          errBlock.style.position = 'absolute';
+          errBlock.style.top = '30%';
+          errBlock.style.left = '40%';
+          errBlock.style.fontSize = '40px';
+          errBlock.textContent = errorMessage;
+          document.body.insertAdjacentElement('beforebegin', errBlock);
+        });
+
+    evt.preventDefault();
+  });
+
+
+  successMessage.addEventListener('click', function () {
+    if (successMessage) {
+      successMessage.classList.add('hidden');
+    }
+    window.map.turnOff();
+
+  });
+
+
 })();

@@ -3,6 +3,7 @@
   var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
   var pinsBlock = document.querySelector('.map__pins');
 
+
   var addPin = function (pin, index) {
     var pinElement = pinTemplate.cloneNode(true);
     pinElement.style.left = pin.location.x + 'px';
@@ -20,7 +21,16 @@
       for (var j = 0; j < adverts.length; j++) {
         pinFragment.appendChild(addPin(adverts[j], j));
       }
-      return pinsBlock.appendChild(pinFragment);
+      pinsBlock.appendChild(pinFragment);
+    },
+
+    removePins: function () {
+      var allPins = document.querySelectorAll('.map__pin[data-id]');
+      allPins.forEach(function (e) {
+        e.parentNode.removeChild(e);
+      });
     }
   };
+
+
 })();

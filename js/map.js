@@ -5,6 +5,9 @@
   var pinMain = document.querySelector('.map__pin--main');
   var pinMainSize = 65;
   var pinMainTail = 22;
+  var mapBorderXlimit = [0, 1135];
+  var mapBorderYlimit = [150, 625];
+  var adverts;
 
   var pinMainCoords = {
     x: Math.floor(pinMain.offsetLeft + pinMainSize / 2),
@@ -17,15 +20,27 @@
 
   var turnActive = function () {
     map.classList.remove('map--faded');
-    window.pins.drawPins(adverts);
+    window.backend.getData(function (ads) {
+      adverts = ads;
+      window.pins.drawPins(adverts);
+    },
+    function () {});
     window.form.on();
     pinMain.removeEventListener('mouseup', turnActive);
   };
 
-  var adverts = window.card.generateAdverts();
+  pinMain.addEventListener('mouseup', turnActive);
 
-  var onPinMainDrag = function (mdevt) {
-    mdevt.preventDefault();
+  window.map = {
+    turnOff: function () {
+      removeCard();
+      document.querySelector('.map').classList.add('map--faded');
+      window.form.off();
+      window.pins.removePins();
+    }
+  };
+
+  var onPinMainMousedown = function (mdevt) {
 
     var beginCoords = {
       x: mdevt.clientX,
@@ -33,7 +48,6 @@
     };
 
     var onPinMainMousemove = function (moveevt) {
-      moveevt.preventDefault();
 
       var shift = {
         x: beginCoords.x - moveevt.clientX,
@@ -50,48 +64,39 @@
         y: pinMain.offsetTop - shift.y
       };
 
+
+      if (pinMainEndCoord.y < mapBorderYlimit[0]) {
+        pinMainEndCoord.y = mapBorderYlimit[0];
+      } else if (pinMainEndCoord.y > mapBorderYlimit[1]) {
+        pinMainEndCoord.y = mapBorderYlimit[1];
+      }
+
+      if (pinMainEndCoord.x < mapBorderXlimit[0]) {
+        pinMainEndCoord.x = mapBorderXlimit[0];
+      } else if (pinMainEndCoord.x > mapBorderXlimit[1]) {
+        pinMainEndCoord.x = mapBorderXlimit[1];
+      }
+
       pinMain.style.left = pinMainEndCoord.x + 'px';
       pinMain.style.top = pinMainEndCoord.y + 'px';
 
+      document.querySelector('#address').value = (Math.floor(pinMainEndCoord.x + pinMainSize / 2)) + ', ' + (pinMainEndCoord.y + pinMainSize + pinMainTail);
 
-      if (pinMain.offsetTop < 0) {
-        pinMain.style.top = 0 + 'px';
-      }
-
-      if (pinMain.offsetTop + pinMainSize + pinMainTail > map.offsetHeight) {
-        pinMain.style.top = map.offsetHeight - pinMainSize - pinMainTail + 'px';
-      }
-
-      if (pinMain.offsetLeft + pinMainSize / 2 < 0) {
-        pinMain.style.left = 0 - pinMainSize / 2 + 'px';
-      }
-
-      if (pinMain.offsetLeft + pinMainSize / 2 > map.offsetWidth) {
-        pinMain.style.left = map.offsetWidth - pinMainSize / 2 + 'px';
-      }
-
-
-      document.querySelector('#address').value = (Math.floor(pinMainEndCoord.x + pinMainSize / 2)) + ', ' + pinMainEndCoord.y;
     };
 
-    var onPinMainMouseup = function (mupevt) {
-      mupevt.preventDefault();
-      turnActive();
-      document.removeEventListener('mousemove', onPinMainMousemove);
-      document.removeEventListener('mouseup', onPinMainMouseup);
+    var onPinMainMouseup = function () {
+      map.removeEventListener('mousemove', onPinMainMousemove);
+      map.removeEventListener('mouseup', onPinMainMouseup);
     };
 
-    document.addEventListener('mousemove', onPinMainMousemove);
-    document.addEventListener('mouseup', onPinMainMouseup);
+    map.addEventListener('mousemove', onPinMainMousemove);
+    map.addEventListener('mouseup', onPinMainMouseup);
   };
 
-
-  pinMain.addEventListener('mouseup', onPinMainDrag);
-  pinMain.addEventListener('mousedown', onPinMainDrag);
+  map.addEventListener('mousedown', onPinMainMousedown);
 
 
   var closeCard = function (evt) {
-
     var target = evt.target;
     while (!target.classList.contains('map__card')) {
       target = target.parentNode;
@@ -101,15 +106,19 @@
   };
 
 
+  var removeCard = function () {
+    var mapPopupCard = map.querySelector('.map__card');
+    if (mapPopupCard) {
+      mapPopupCard.parentNode.removeChild(mapPopupCard);
+    }
+  };
+
   var onPinsClickCardPopup = function (evt) {
     var target = evt.target;
 
     while (!target.classList.contains('map')) {
       if (target.classList.contains('map__pin') && !target.classList.contains('map__pin--main')) {
-        var mapPopupCard = map.querySelector('.map__card');
-        if (mapPopupCard) {
-          mapPopupCard.parentNode.removeChild(mapPopupCard);
-        }
+        removeCard();
         var index = target.dataset.id;
         window.card.drawCard(adverts[index]);
         var cardCloseBlock = map.querySelector('.popup__close');
@@ -122,5 +131,9 @@
 
   map.addEventListener('click', onPinsClickCardPopup);
 
+  map.addEventListener('keydown', function (evt) {
+    window.data.isEscPress(evt, removeCard);
+    evt.stopPropagation();
+  });
 
 })();

@@ -3,48 +3,6 @@
 (function () {
   var cardTemplate = document.querySelector('template').content.querySelector('.map__card');
 
-  var ROOMS_QUANTITY = 5;
-  var GUESTS_QUANTITY = 50;
-  var PRICE_MINIMUM = 1000;
-  var PRICE_MAXIMUM = 1000000;
-  var X_MINIMUM = 300;
-  var X_MAXIMUM = 900;
-  var Y_MINIMUM = 150;
-  var Y_MAXIMUM = 500;
-  var ADVERTS_QUANTITY = 8;
-
-  var TITLES = [
-    'Большая уютная квартира',
-    'Маленькая неуютная квартира',
-    'Огромный прекрасный дворец',
-    'Маленький ужасный дворец',
-    'Красивый гостевой домик',
-    'Некрасивый негостеприимный домик',
-    'Уютное бунгало далеко от моря',
-    'Неуютное бунгало по колено в воде'
-  ];
-
-  var AVATARS = [
-    'img/avatars/user01.png',
-    'img/avatars/user02.png',
-    'img/avatars/user03.png',
-    'img/avatars/user04.png',
-    'img/avatars/user05.png',
-    'img/avatars/user06.png',
-    'img/avatars/user07.png',
-    'img/avatars/user08.png'
-  ];
-
-  var CHECK_TIMES = ['12:00', '13:00', '14:00'];
-  var TYPES = ['palace', 'flat', 'house', 'bungalo'];
-  var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-  var PHOTOS = [
-    'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-  ];
-
-
   var addPhotosInCard = function (cardElement, photos) {
     var photosList = cardElement.querySelector('.popup__photos');
     var photoElement = photosList.querySelector('img');
@@ -91,45 +49,10 @@
       cardElement.querySelector('.popup__description').textContent = advert.offer.description;
 
       addFeaturesInCard(cardElement, advert.offer.features);
-      addPhotosInCard(cardElement, PHOTOS);
+      addPhotosInCard(cardElement, advert.offer.photos);
 
       cardElement.querySelector('img').src = advert.author.avatar;
       document.querySelector('.map__filters-container').insertAdjacentElement('beforeBegin', cardElement);
-    },
-
-    generateAdverts: function () {
-      var adverts = [];
-
-      for (var i = 0; i < ADVERTS_QUANTITY; i++) {
-        var addressX = window.data.getRandomNumber(X_MINIMUM, X_MAXIMUM);
-        var addressY = window.data.getRandomNumber(Y_MINIMUM, Y_MAXIMUM);
-        var addressCoordinates = addressX + ', ' + addressY;
-
-        var advert = {
-          author: {
-            avatar: AVATARS[i]
-          },
-          offer: {
-            title: TITLES[window.data.getRandomNumber(0, TITLES.length - 1)],
-            address: addressCoordinates,
-            price: window.data.getRandomNumber(PRICE_MINIMUM, PRICE_MAXIMUM),
-            type: TYPES[window.data.getRandomNumber(0, TYPES.length - 1)],
-            rooms: window.data.getRandomNumber(1, ROOMS_QUANTITY),
-            guests: window.data.getRandomNumber(1, GUESTS_QUANTITY),
-            checkin: CHECK_TIMES[window.data.getRandomNumber(0, CHECK_TIMES.length - 1)],
-            checkout: CHECK_TIMES[window.data.getRandomNumber(0, CHECK_TIMES.length - 1)],
-            features: window.data.shuffle(FEATURES).slice(window.data.getRandomNumber(0, FEATURES.length - 1)),
-            description: ' ',
-            photos: window.data.shuffle(PHOTOS)
-          },
-          location: {
-            x: addressX,
-            y: addressY
-          }
-        };
-        adverts.push(advert);
-      }
-      return adverts;
     }
   };
 
