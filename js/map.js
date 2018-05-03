@@ -43,7 +43,6 @@
 
   };
 
-
   document.querySelector('#address').value = window.map.pinMainCoords.x + ', ' + window.map.pinMainCoords.y;
 
   pinMain.addEventListener('mouseup', window.map.turnActive);
@@ -145,6 +144,5 @@
   });
 
   clearFormButton.addEventListener('click', window.map.turnOff);
-
 
 })();

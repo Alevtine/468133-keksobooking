@@ -10,7 +10,7 @@
   var checkOutInput = document.querySelector('#timeout');
   var formAd = document.querySelector('.ad-form');
   var fields = formAd.querySelectorAll('fieldset');
-  var successMessage = document.querySelector('.success');
+
 
   window.form = {
 
@@ -85,21 +85,13 @@
   formAd.addEventListener('submit', function (evt) {
     window.backend.sendData(new FormData(formAd),
         function () {
-          successMessage.classList.remove('hidden');
+          window.data.onSuccess();
         },
-        function () {
-          window.data.onErrorShow();
+        function (errorMesssage) {
+          window.data.onErrorShow(errorMesssage);
         });
 
     evt.preventDefault();
-  });
-
-
-  successMessage.addEventListener('click', function () {
-    if (successMessage) {
-      successMessage.classList.add('hidden');
-    }
-    window.map.turnOff();
   });
 
 
