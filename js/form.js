@@ -8,24 +8,28 @@
   var guests = guestsInput.querySelectorAll('option');
   var checkInInput = document.querySelector('#timein');
   var checkOutInput = document.querySelector('#timeout');
-  var fields = document.querySelector('.ad-form').querySelectorAll('fieldset');
+  var formAd = document.querySelector('.ad-form');
+  var fields = formAd.querySelectorAll('fieldset');
+
 
   window.form = {
 
     off: function () {
+      formAd.classList.add('ad-form--disabled');
       for (var j = 0; j < fields.length; j++) {
         fields[j].disabled = 'disabled';
       }
+      formAd.reset();
     },
 
     on: function () {
-      document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+      formAd.classList.remove('ad-form--disabled');
       for (var t = 0; t < fields.length; t++) {
         fields[t].disabled = '';
       }
     }
-  };
 
+  };
 
   var CHANGE_ROOMS_RULES = {
     '1': ['1'],
@@ -76,4 +80,19 @@
       guestsInput.value = CHANGE_ROOMS_RULES[currentValue][0];
     }
   });
+
+
+  formAd.addEventListener('submit', function (evt) {
+    window.backend.sendData(new FormData(formAd),
+        function () {
+          window.data.onSuccess();
+        },
+        function (errorMesssage) {
+          window.data.onErrorShow(errorMesssage);
+        });
+
+    evt.preventDefault();
+  });
+
+
 })();
