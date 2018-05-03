@@ -8,37 +8,45 @@
   var mapBorderXlimit = [0, 1135];
   var mapBorderYlimit = [150, 625];
   var adverts;
-
-  var pinMainCoords = {
-    x: Math.floor(pinMain.offsetLeft + pinMainSize / 2),
-    y: pinMain.offsetTop + pinMainSize + pinMainTail
-  };
-
-  document.querySelector('#address').value = pinMainCoords.x + ', ' + pinMainCoords.y;
+  var clearFormButton = document.querySelector('.ad-form__reset');
 
   window.form.off();
 
-  var turnActive = function () {
-    map.classList.remove('map--faded');
-    window.backend.getData(function (ads) {
-      adverts = ads;
-      window.pins.drawPins(adverts);
-    },
-    function () {});
-    window.form.on();
-    pinMain.removeEventListener('mouseup', turnActive);
-  };
-
-  pinMain.addEventListener('mouseup', turnActive);
-
   window.map = {
+
+    pinMainCoords: {
+      x: Math.floor(pinMain.offsetLeft + pinMainSize / 2),
+      y: pinMain.offsetTop + pinMainSize + pinMainTail
+    },
+
     turnOff: function () {
       removeCard();
       document.querySelector('.map').classList.add('map--faded');
       window.form.off();
       window.pins.removePins();
+      pinMain.addEventListener('mouseup', window.map.turnActive);
+      document.querySelector('.map__pin--main').style.left = window.map.pinMainCoords.x + 'px';
+      document.querySelector('.map__pin--main').style.top = window.map.pinMainCoords.y + 'px';
+      document.querySelector('#address').value = window.map.pinMainCoords.x + ', ' + window.map.pinMainCoords.y;
+    },
+
+    turnActive: function () {
+      map.classList.remove('map--faded');
+      window.backend.getData(function (ads) {
+        adverts = ads;
+        window.pins.drawPins(adverts);
+      },
+      function () {});
+      window.form.on();
+      pinMain.removeEventListener('mouseup', window.map.turnActive);
     }
+
   };
+
+
+  document.querySelector('#address').value = window.map.pinMainCoords.x + ', ' + window.map.pinMainCoords.y;
+
+  pinMain.addEventListener('mouseup', window.map.turnActive);
 
   var onPinMainMousedown = function (mdevt) {
 
@@ -135,5 +143,8 @@
     window.data.isEscPress(evt, removeCard);
     evt.stopPropagation();
   });
+
+  clearFormButton.addEventListener('click', window.map.turnOff);
+
 
 })();

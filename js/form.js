@@ -15,9 +15,11 @@
   window.form = {
 
     off: function () {
+      formAd.classList.add('ad-form--disabled');
       for (var j = 0; j < fields.length; j++) {
         fields[j].disabled = 'disabled';
       }
+      formAd.reset();
     },
 
     on: function () {
@@ -26,6 +28,7 @@
         fields[t].disabled = '';
       }
     }
+
   };
 
   var CHANGE_ROOMS_RULES = {
@@ -78,20 +81,14 @@
     }
   });
 
+
   formAd.addEventListener('submit', function (evt) {
     window.backend.sendData(new FormData(formAd),
         function () {
           successMessage.classList.remove('hidden');
         },
-        function (errorMessage) {
-          var errBlock = document.createElement('div');
-          errBlock.style = 'z-index: 1; background-color: pink;';
-          errBlock.style.position = 'absolute';
-          errBlock.style.top = '30%';
-          errBlock.style.left = '40%';
-          errBlock.style.fontSize = '40px';
-          errBlock.textContent = errorMessage;
-          document.body.insertAdjacentElement('beforebegin', errBlock);
+        function () {
+          window.data.onErrorShow();
         });
 
     evt.preventDefault();
@@ -103,7 +100,6 @@
       successMessage.classList.add('hidden');
     }
     window.map.turnOff();
-
   });
 
 
