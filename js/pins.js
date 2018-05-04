@@ -1,4 +1,5 @@
 'use strict';
+
 (function () {
   var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
   var pinsBlock = document.querySelector('.map__pins');

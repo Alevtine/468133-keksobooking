@@ -39,7 +39,7 @@
     },
 
     removeErrBlock: function () {
-      if (errBlock) {
+      if (document.contains(errBlock)) {
         errBlock.parentNode.removeChild(errBlock);
       }
     },
