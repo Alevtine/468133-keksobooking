@@ -48,12 +48,17 @@
   };
 
   var updateAdverts = function () {
-    var filteredAdverts = window.adverts.slice(5).filter(onTypeFilter).filter(onPriceFilter).filter(onRoomsFilter).filter(onGuestsFilter).filter(onFeaturesFilter);
+    var filteredAdverts = window.adverts
+        .filter(onTypeFilter)
+        .filter(onPriceFilter)
+        .filter(onRoomsFilter)
+        .filter(onGuestsFilter)
+        .filter(onFeaturesFilter)
+        .slice(0, 5);
     window.filteredAdverts = filteredAdverts;
-    window.pins.drawPins(filteredAdverts);
     window.removeCard();
     window.pins.removePins();
-    // нарисовать карточки
+    window.pins.drawPins(filteredAdverts);
   };
 
 

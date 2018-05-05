@@ -5,12 +5,11 @@
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
   var DEBOUNCE_INTERVAL = 500;
-
+  var lastTimeout;
   var errBlock = document.createElement('div');
   var successMessage = document.querySelector('.success');
 
   window.debounce = function (fun) {
-    var lastTimeout;
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
