@@ -5,6 +5,7 @@
   var pinMain = document.querySelector('.map__pin--main');
   var pinMainSize = 65;
   var pinMainTail = 22;
+  var adverts;
   var PIN_SHOWED_QTTY = 5;
   var mapBorderXlimit = [0, 1135];
   var mapBorderYlimit = [150, 625];
@@ -35,12 +36,11 @@
       map.classList.remove('map--faded');
       window.backend.getData(function (ads) {
         window.data.shuffle(ads);
+        adverts = ads;
         window.adverts = ads;
         window.filteredAdverts = ads;
-        if (ads.length > PIN_SHOWED_QTTY) {
-          ads.length = PIN_SHOWED_QTTY;
-        }
-        window.pins.drawPins(ads);
+        adverts = ads.slice(5);
+        window.pins.drawPins(adverts);
       },
       function () {});
       window.form.on();
@@ -133,7 +133,7 @@
       if (target.classList.contains('map__pin') && !target.classList.contains('map__pin--main')) {
         window.removeCard();
         var index = target.dataset.id;
-        window.card.drawCard(window.filteredAdverts[index]);
+        window.card.drawCard(adverts[index]);
         var cardCloseBlock = map.querySelector('.popup__close');
         cardCloseBlock.addEventListener('click', closeCard);
         return;
