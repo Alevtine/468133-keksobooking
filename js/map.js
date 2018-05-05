@@ -5,9 +5,9 @@
   var pinMain = document.querySelector('.map__pin--main');
   var pinMainSize = 65;
   var pinMainTail = 22;
+  var PIN_SHOWED_QTTY = 5;
   var mapBorderXlimit = [0, 1135];
   var mapBorderYlimit = [150, 625];
-  var adverts;
   var clearFormButton = document.querySelector('.ad-form__reset');
 
   window.form.off();
@@ -24,6 +24,7 @@
       document.querySelector('.map').classList.add('map--faded');
       window.form.off();
       window.pins.removePins();
+      window.data.filterReset();
       pinMain.addEventListener('mouseup', window.map.turnActive);
       document.querySelector('.map__pin--main').style.left = window.map.pinMainCoords.x + 'px';
       document.querySelector('.map__pin--main').style.top = window.map.pinMainCoords.y + 'px';
@@ -33,9 +34,13 @@
     turnActive: function () {
       map.classList.remove('map--faded');
       window.backend.getData(function (ads) {
-        adverts = ads;
+        window.data.shuffle(ads);
         window.adverts = ads;
-        window.pins.drawPins(adverts);
+        window.filteredAdverts = ads;
+        if (ads.length > PIN_SHOWED_QTTY) {
+          ads.length = PIN_SHOWED_QTTY;
+        }
+        window.pins.drawPins(ads);
       },
       function () {});
       window.form.on();
@@ -101,7 +106,7 @@
     map.addEventListener('mouseup', onPinMainMouseup);
   };
 
-  map.addEventListener('mousedown', onPinMainMousedown);
+  pinMain.addEventListener('mousedown', onPinMainMousedown);
 
 
   var closeCard = function (evt) {
@@ -121,14 +126,14 @@
     }
   };
 
-var onPinsClickCardPopup = function (evt) {
+  var onPinsClickCardPopup = function (evt) {
     var target = evt.target;
 
     while (!target.classList.contains('map')) {
       if (target.classList.contains('map__pin') && !target.classList.contains('map__pin--main')) {
         window.removeCard();
         var index = target.dataset.id;
-        window.card.drawCard(adverts[index]);
+        window.card.drawCard(window.filteredAdverts[index]);
         var cardCloseBlock = map.querySelector('.popup__close');
         cardCloseBlock.addEventListener('click', closeCard);
         return;
@@ -145,5 +150,6 @@ var onPinsClickCardPopup = function (evt) {
   });
 
   clearFormButton.addEventListener('click', window.map.turnOff);
+
 
 })();
