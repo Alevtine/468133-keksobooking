@@ -11,6 +11,12 @@
   var formAd = document.querySelector('.ad-form');
   var fields = formAd.querySelectorAll('fieldset');
 
+  var CHANGE_ROOMS_RULES = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0']
+  };
 
   window.form = {
 
@@ -28,14 +34,6 @@
         fields[t].disabled = '';
       }
     }
-
-  };
-
-  var CHANGE_ROOMS_RULES = {
-    '1': ['1'],
-    '2': ['1', '2'],
-    '3': ['1', '2', '3'],
-    '100': ['0']
   };
 
   for (var b = 0; b < guests.length; b++) {
@@ -81,7 +79,6 @@
     }
   });
 
-
   formAd.addEventListener('submit', function (evt) {
     window.backend.sendData(new FormData(formAd),
         function () {
@@ -93,6 +90,5 @@
 
     evt.preventDefault();
   });
-
 
 })();

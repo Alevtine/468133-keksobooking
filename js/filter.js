@@ -8,6 +8,11 @@
   var housingGuests = document.querySelector('#housing-guests');
   var housingFeatures = document.querySelector('#housing-features').querySelectorAll('.map__checkbox');
 
+  var FILTER_PRICES = {
+    low: 10000,
+    middle: 50000
+  };
+
   var onTypeFilter = function (advert) {
     if (housingType[housingType.selectedIndex].value === 'any') {
       return advert;
@@ -17,9 +22,9 @@
 
   var onPriceFilter = function (advert) {
     switch (housingPrice[housingPrice.selectedIndex].value) {
-      case 'low': return advert.offer.price <= 10000;
-      case 'middle': return advert.offer.price >= 10000 && advert.offer.price <= 50000;
-      case 'high': return advert.offer.price >= 50000;
+      case 'low': return advert.offer.price <= FILTER_PRICES.low;
+      case 'middle': return advert.offer.price >= FILTER_PRICES.low && advert.offer.price <= FILTER_PRICES.middle;
+      case 'high': return advert.offer.price >= FILTER_PRICES.middle;
       default: return advert;
     }
   };
@@ -56,9 +61,9 @@
         .filter(onFeaturesFilter)
         .slice(0, 5);
     window.filteredAdverts = filteredAdverts;
-    window.removeCard();
-    window.pins.removePins();
-    window.pins.drawPins(filteredAdverts);
+    window.card.remove();
+    window.pins.removeAll();
+    window.pins.draw(filteredAdverts);
   };
 
 

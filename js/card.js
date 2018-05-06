@@ -38,7 +38,7 @@
 
   window.card = {
 
-    drawCard: function (advert) {
+    draw: function (advert) {
       var cardElement = cardTemplate.cloneNode(true);
       cardElement.querySelector('.popup__title').textContent = advert.offer.title;
       cardElement.querySelector('.popup__text--address').textContent = advert.offer.address;
@@ -53,6 +53,13 @@
 
       cardElement.querySelector('img').src = advert.author.avatar;
       document.querySelector('.map__filters-container').insertAdjacentElement('beforeBegin', cardElement);
+    },
+
+    remove: function () {
+      var mapPopupCard = document.querySelector('.map__card');
+      if (mapPopupCard) {
+        mapPopupCard.parentNode.removeChild(mapPopupCard);
+      }
     }
   };
 

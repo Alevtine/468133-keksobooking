@@ -2,9 +2,9 @@
 
 (function () {
 
-  var urlToGET = 'https://js.dump.academy/keksobooking/data';
-  var urlToPOST = 'https://js.dump.academy/keksobooking';
   var TIMEOUT = 10000;
+  var URL_TO_GET = 'https://js.dump.academy/keksobooking/data';
+  var URL_TO_POST = 'https://js.dump.academy/keksobooking';
 
   var dataLoad = function (method, url, onLoad, onError, data) {
     var xhr = new XMLHttpRequest();
@@ -34,11 +34,11 @@
 
   window.backend = {
     getData: function (onLoad, onError) {
-      dataLoad('GET', urlToGET, onLoad, onError);
+      dataLoad('GET', URL_TO_GET, onLoad, onError);
     },
 
     sendData: function (data, onLoad, onError) {
-      dataLoad('POST', urlToPOST, onLoad, onError, data);
+      dataLoad('POST', URL_TO_POST, onLoad, onError, data);
     }
   };
 
