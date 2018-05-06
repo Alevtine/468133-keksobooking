@@ -6,11 +6,11 @@
   var addPhotosInCard = function (cardElement, photos) {
     var photosList = cardElement.querySelector('.popup__photos');
     var photoElement = photosList.querySelector('img');
-    for (var j = 0; j < photos.length; j++) {
-      photoElement = photoElement.cloneNode(true);
-      photoElement.src = photos[j];
-      photosList.appendChild(photoElement);
-    }
+    photos.forEach(function (elem, index) {
+      elem = photoElement.cloneNode(true);
+      elem.src = photos[index];
+      photosList.appendChild(elem);
+    });
     photosList.firstElementChild.remove(photosList);
     return photosList;
   };
@@ -19,11 +19,11 @@
     var featuresList = cardElement.querySelector('.popup__features');
     featuresList.innerHTML = '';
     var featureTemplate = document.querySelector('template').content.querySelector('.popup__feature');
-    for (var a = 0; a < features.length; a++) {
-      var featureElement = featureTemplate.cloneNode(true);
-      featureElement.className = 'popup__feature popup__feature--' + features[a];
-      featuresList.appendChild(featureElement);
-    }
+    features.forEach(function (elem, index) {
+      elem = featureTemplate.cloneNode(true);
+      elem.className = 'popup__feature popup__feature--' + features[index];
+      featuresList.appendChild(elem);
+    });
   };
 
   var apartmentType = function (type) {
@@ -38,7 +38,7 @@
 
   window.card = {
 
-    drawCard: function (advert) {
+    draw: function (advert) {
       var cardElement = cardTemplate.cloneNode(true);
       cardElement.querySelector('.popup__title').textContent = advert.offer.title;
       cardElement.querySelector('.popup__text--address').textContent = advert.offer.address;
@@ -53,6 +53,13 @@
 
       cardElement.querySelector('img').src = advert.author.avatar;
       document.querySelector('.map__filters-container').insertAdjacentElement('beforeBegin', cardElement);
+    },
+
+    remove: function () {
+      var mapPopupCard = document.querySelector('.map__card');
+      if (mapPopupCard) {
+        mapPopupCard.parentNode.removeChild(mapPopupCard);
+      }
     }
   };
 
