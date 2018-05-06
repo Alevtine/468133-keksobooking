@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var ANY_VALUE = 'any';
+  var PIN_SHOWED_QTTY = 5;
   var filters = document.querySelector('.map__filters');
   var housingType = document.querySelector('#housing-type');
   var housingPrice = document.querySelector('#housing-price');
@@ -14,7 +16,7 @@
   };
 
   var onTypeFilter = function (advert) {
-    if (housingType[housingType.selectedIndex].value === 'any') {
+    if (housingType[housingType.selectedIndex].value === ANY_VALUE) {
       return advert;
     }
     return advert.offer.type === housingType[housingType.selectedIndex].value;
@@ -30,14 +32,14 @@
   };
 
   var onRoomsFilter = function (advert) {
-    if (housingRooms[housingRooms.selectedIndex].value === 'any') {
+    if (housingRooms[housingRooms.selectedIndex].value === ANY_VALUE) {
       return advert;
     }
     return advert.offer.rooms === parseFloat(housingRooms[housingRooms.selectedIndex].value);
   };
 
   var onGuestsFilter = function (advert) {
-    if (housingGuests[housingGuests.selectedIndex].value === 'any') {
+    if (housingGuests[housingGuests.selectedIndex].value === ANY_VALUE) {
       return advert;
     }
     return advert.offer.guests === parseFloat(housingGuests[housingGuests.selectedIndex].value);
@@ -59,7 +61,7 @@
         .filter(onRoomsFilter)
         .filter(onGuestsFilter)
         .filter(onFeaturesFilter)
-        .slice(0, 5);
+        .slice(0, PIN_SHOWED_QTTY);
     window.filteredAdverts = filteredAdverts;
     window.card.remove();
     window.pins.removeAll();

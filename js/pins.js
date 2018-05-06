@@ -20,9 +20,9 @@
   window.pins = {
     draw: function (adverts) {
       var pinFragment = document.createDocumentFragment();
-      for (var j = 0; j < adverts.length; j++) {
-        pinFragment.appendChild(addPin(adverts[j], j));
-      }
+      adverts.forEach(function (elem, index) {
+        pinFragment.appendChild(addPin(elem, index));
+      });
       pinsBlock.appendChild(pinFragment);
     },
 

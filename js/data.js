@@ -9,11 +9,11 @@
   var errBlock = document.createElement('div');
   var successMessage = document.querySelector('.success');
 
-  window.debounce = function (fun) {
+  window.debounce = function (action) {
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
-    lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
+    lastTimeout = window.setTimeout(action, DEBOUNCE_INTERVAL);
   };
 
 
@@ -31,7 +31,7 @@
       }
     },
 
-    onErrorShow: function (errorMessage) {
+    onError: function (errorMessage) {
       errBlock.style.position = 'fixed';
       errBlock.style.top = '20%';
       errBlock.style.left = '40%';
@@ -44,11 +44,11 @@
       errBlock.style.padding = '20px 70px';
       document.body.insertAdjacentElement('afterbegin', errBlock);
       document.body.insertAdjacentElement('afterbegin', errBlock);
-      errBlock.addEventListener('click', window.data.removeErrBlock);
-      setTimeout(window.data.removeErrBlock, 5000);
+      errBlock.addEventListener('click', window.data.hideError);
+      setTimeout(window.data.hideError, 5000);
     },
 
-    removeErrBlock: function () {
+    hideError: function () {
       if (document.contains(errBlock)) {
         errBlock.parentNode.removeChild(errBlock);
       }
