@@ -59,6 +59,19 @@
     }
   });
 
+  priceInput.addEventListener('input', function (evt) {
+    if (typeInput.value === 'flat' && evt.target.value < MIN_PRICE_FLAT) {
+      priceInput.setCustomValidity('Цена не может быть меньше ' + MIN_PRICE_FLAT);
+    } else if (typeInput.value === 'palace' && evt.target.value < MIN_PRICE_PALACE) {
+      priceInput.setCustomValidity('Цена не может быть меньше ' + MIN_PRICE_PALACE);
+    } else if (typeInput.value === 'house' && evt.target.value < MIN_PRICE_HOUSE) {
+      priceInput.setCustomValidity('Цена не может быть меньше ' + MIN_PRICE_HOUSE);
+    } else {
+      priceInput.setCustomValidity('');
+    }
+  });
+
+
   formAd.addEventListener('submit', function (evt) {
     window.backend.sendData(new FormData(formAd),
         function () {
@@ -70,6 +83,7 @@
 
     evt.preventDefault();
   });
+
 
   window.form = {
 
@@ -87,6 +101,8 @@
         elem.disabled = '';
       });
     }
+
   };
+
 
 })();

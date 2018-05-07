@@ -2,28 +2,29 @@
 
 (function () {
   var cardTemplate = document.querySelector('template').content.querySelector('.map__card');
+  var fragment = document.createDocumentFragment();
 
   var addPhotosInCard = function (cardElement, photos) {
     var photosList = cardElement.querySelector('.popup__photos');
-    var photoElement = photosList.querySelector('img');
+    var photoImg = photosList.querySelector('img');
     photos.forEach(function (elem, index) {
-      elem = photoElement.cloneNode(true);
+      elem = photoImg.cloneNode(true);
       elem.src = photos[index];
-      photosList.appendChild(elem);
+      fragment.appendChild(elem);
     });
     photosList.firstElementChild.remove(photosList);
-    return photosList;
+    cardElement.appendChild(fragment);
   };
 
   var addFeaturesInCard = function (cardElement, features) {
     var featuresList = cardElement.querySelector('.popup__features');
     featuresList.innerHTML = '';
-    var featureTemplate = document.querySelector('template').content.querySelector('.popup__feature');
     features.forEach(function (elem, index) {
-      elem = featureTemplate.cloneNode(true);
+      elem = document.createElement('li');
       elem.className = 'popup__feature popup__feature--' + features[index];
-      featuresList.appendChild(elem);
+      fragment.appendChild(elem);
     });
+    featuresList.appendChild(fragment);
   };
 
   var apartmentType = function (type) {
