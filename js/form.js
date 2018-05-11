@@ -5,6 +5,7 @@
   var MIN_PRICE_HOUSE = 5000;
   var MIN_PRICE_FLAT = 1000;
   var MIN_PRICE_BUNGALO = 0;
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var priceInput = document.querySelector('#price');
   var typeInput = document.querySelector('#type');
   var roomsInput = document.querySelector('#room_number');
@@ -87,6 +88,55 @@
         elem.disabled = '';
       });
     }
+  };
+
+
+  var avatarImg = document.querySelector('.ad-form-header__preview').querySelector('img');
+  var avatarChooser = document.querySelector('#avatar');
+  var uploadedPhotoBlock = document.querySelector('.ad-form__photo');
+  var photosChooser = document.querySelector('#images');
+  var photosContainer = document.querySelector('.ad-form__photo-container');
+
+  var fileChooser = function (chooser, pic) {
+    var file = chooser.files[0];
+    var fileName = file.name.toLowerCase();
+    var matches = FILE_TYPES.some(function (item) {
+      return fileName.endsWith(item);
+    });
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        pic.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+    }
+  };
+
+  avatarChooser.addEventListener('change', function () {
+    fileChooser(avatarChooser, avatarImg);
+  });
+
+  photosChooser.addEventListener('change', function () {
+    var img = avatarImg.cloneNode(true);
+    var uploadedPhoto = uploadedPhotoBlock.cloneNode(true);
+    uploadedPhotoBlock.remove();
+    fileChooser(photosChooser, img);
+    uploadedPhoto.appendChild(img);
+    photosContainer.appendChild(uploadedPhoto);
+  });
+
+
+  // var dropArea = document.querySelector('.ad-form__field')
+  // dropArea.addEventListener('dragenter', handlerFunct
+
+
+  window.deleteUploads = function () {
+    avatarImg.src = 'img/muffin-grey.svg';
+    Array.from(document.querySelectorAll('.ad-form__photo')).forEach(function (it) {
+      it.remove();
+    });
   };
 
 })();

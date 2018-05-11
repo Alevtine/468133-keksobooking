@@ -25,6 +25,7 @@
       window.form.off();
       window.pins.removeAll();
       window.data.filterReset();
+      window.deleteUploads();
       pinMain.addEventListener('mouseup', window.map.turnActive);
       pinMain.style.left = window.map.pinMainCoords.x + 'px';
       pinMain.style.top = window.map.pinMainCoords.y + 'px';
