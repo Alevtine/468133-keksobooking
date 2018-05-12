@@ -6,6 +6,8 @@
   var MIN_PRICE_FLAT = 1000;
   var MIN_PRICE_BUNGALO = 0;
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var AVATAR_SIZE = 70;
+  var PHOTO_SIZE = '100%';
   var priceInput = document.querySelector('#price');
   var typeInput = document.querySelector('#type');
   var roomsInput = document.querySelector('#room_number');
@@ -14,6 +16,11 @@
   var checkOutInput = document.querySelector('#timeout');
   var formAd = document.querySelector('.ad-form');
   var fields = formAd.querySelectorAll('fieldset');
+  var avatarImg = document.querySelector('.ad-form-header__preview').querySelector('img');
+  var avatarChooser = document.querySelector('#avatar');
+  var uploadedPhotoBlock = document.querySelector('.ad-form__photo');
+  var photosChooser = document.querySelector('#images');
+  var photosContainer = document.querySelector('.ad-form__photo-container');
 
   var CHANGE_ROOMS_RULES = {
     '1': ['1'],
@@ -72,31 +79,6 @@
     evt.preventDefault();
   });
 
-  window.form = {
-
-    off: function () {
-      formAd.classList.add('ad-form--disabled');
-      fields.forEach(function (elem) {
-        elem.disabled = 'disabled';
-      });
-      formAd.reset();
-    },
-
-    on: function () {
-      formAd.classList.remove('ad-form--disabled');
-      fields.forEach(function (elem) {
-        elem.disabled = '';
-      });
-    }
-  };
-
-
-  var avatarImg = document.querySelector('.ad-form-header__preview').querySelector('img');
-  var avatarChooser = document.querySelector('#avatar');
-  var uploadedPhotoBlock = document.querySelector('.ad-form__photo');
-  var photosChooser = document.querySelector('#images');
-  var photosContainer = document.querySelector('.ad-form__photo-container');
-
   var fileChooser = function (chooser, pic) {
     var file = chooser.files[0];
     var fileName = file.name.toLowerCase();
@@ -116,10 +98,15 @@
 
   avatarChooser.addEventListener('change', function () {
     fileChooser(avatarChooser, avatarImg);
+    avatarImg.setAttribute('width', AVATAR_SIZE);
+    avatarImg.setAttribute('height', AVATAR_SIZE);
+    avatarImg.parentNode.style.padding = '0'
   });
 
   photosChooser.addEventListener('change', function () {
     var img = avatarImg.cloneNode(true);
+    img.style.width = PHOTO_SIZE;
+    img.style.height = PHOTO_SIZE;
     var uploadedPhoto = uploadedPhotoBlock.cloneNode(true);
     uploadedPhotoBlock.remove();
     fileChooser(photosChooser, img);
@@ -128,8 +115,9 @@
   });
 
 
-  // var dropArea = document.querySelector('.ad-form__field')
-  // dropArea.addEventListener('dragenter', handlerFunct
+// dr'n'drop
+// var dropArea = document.querySelector('.ad-form__upload');
+// var dragged;
 
 
   window.deleteUploads = function () {
@@ -137,6 +125,24 @@
     Array.from(document.querySelectorAll('.ad-form__photo')).forEach(function (it) {
       it.remove();
     });
+  };
+
+  window.form = {
+
+    off: function () {
+      formAd.classList.add('ad-form--disabled');
+      fields.forEach(function (elem) {
+        elem.disabled = 'disabled';
+      });
+      formAd.reset();
+    },
+
+    on: function () {
+      formAd.classList.remove('ad-form--disabled');
+      fields.forEach(function (elem) {
+        elem.disabled = '';
+      });
+    }
   };
 
 })();
