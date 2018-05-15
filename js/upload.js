@@ -1,47 +1,50 @@
 'use strict';
 (function () {
-
-  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var AVATAR_SIZE = 70;
   var PHOTO_SIZE = '100%';
   var avatarImg = document.querySelector('.ad-form-header__preview').querySelector('img');
   var avatarChooser = document.querySelector('#avatar');
+  var avatarDropArea = document.querySelector('.ad-form__field');
+  var photoDropZone = document.querySelector('.ad-form__upload');
   var photosChooser = document.querySelector('#images');
-
-  var fileChooser = function (chooser, upload) {
-    var file = chooser.files[0];
-    var fileName = file.name.toLowerCase();
-    var matches = FILE_TYPES.some(function (item) {
-      return fileName.endsWith(item);
-    });
-    if (matches) {
-      var reader = new FileReader();
-      reader.addEventListener('load', function () {
-        upload.src = reader.result;
-      });
-      reader.readAsDataURL(file);
-    }
-  };
-
-  avatarChooser.addEventListener('change', function () {
-    fileChooser(avatarChooser, avatarImg);
-    avatarImg.setAttribute('width', AVATAR_SIZE);
-    avatarImg.setAttribute('height', AVATAR_SIZE);
-    avatarImg.parentNode.style.padding = '0';
-  });
-
-  // переделать нормально без повторов
   var uploadedPhotoBlock = document.querySelector('.ad-form__photo');
   var photosContainer = document.querySelector('.ad-form__photo-container');
   var dragged;
 
-  var uploadPhoto = function () {
+  var avatarStyle = function () {
+    avatarImg.setAttribute('width', AVATAR_SIZE);
+    avatarImg.setAttribute('height', AVATAR_SIZE);
+    avatarImg.parentNode.style.padding = '0';
+  };
+
+  avatarChooser.addEventListener('change', function () {
+    window.data.fileChooser(avatarChooser.files[0], avatarImg);
+    avatarStyle();
+  });
+
+  avatarDropArea.addEventListener('dragenter', function (evt) {
+    evt.preventDefault();
+  });
+
+  avatarDropArea.addEventListener('dragover', function (evt) {
+    evt.preventDefault();
+    return false;
+  });
+
+
+  avatarDropArea.addEventListener('drop', function (evt) {
+    evt.preventDefault();
+    window.data.fileChooser(evt.dataTransfer.files[0], avatarImg);
+    avatarStyle();
+  });
+
+  var uploadPhoto = function (chooser) {
     var img = avatarImg.cloneNode(true);
     img.style.width = PHOTO_SIZE;
     img.style.height = PHOTO_SIZE;
     var uploadedPhoto = uploadedPhotoBlock.cloneNode(true);
     uploadedPhotoBlock.remove();
-    fileChooser(photosChooser, img);
+    window.data.fileChooser(chooser, img);
     uploadedPhoto.appendChild(img);
     photosContainer.appendChild(uploadedPhoto);
 
@@ -82,45 +85,32 @@
     photosContainer.insertAdjacentElement('beforeend', uploadedPhoto);
   };
 
-  photosChooser.addEventListener('change', uploadPhoto);
+  photosChooser.addEventListener('change', function () {
+    uploadPhoto(photosChooser.files[0]);
+  });
 
-  var dropZone = document.querySelector('.ad-form__upload');
-
-  dropZone.addEventListener('dragenter', function (evt) {
+  photoDropZone.addEventListener('dragenter', function (evt) {
     evt.preventDefault();
   });
 
-  dropZone.addEventListener('dragover', function (evt) {
+  photoDropZone.addEventListener('dragover', function (evt) {
     evt.preventDefault();
     return false;
   });
 
-  dropZone.addEventListener('drop', function (evt) {
+  photoDropZone.addEventListener('drop', function (evt) {
     evt.preventDefault();
-    var dropped = evt.dataTransfer.files[0];
-    var fileName = dropped.name.toLowerCase();
-    var matches = FILE_TYPES.some(function (item) {
-      return fileName.endsWith(item);
-    });
-    if (matches) {
-      var reader = new FileReader();
-      reader.addEventListener('load', function () {
-        dropped.src = reader.result;
-      });
-      reader.readAsDataURL(dropped);
-    }
-    dropped = avatarImg.cloneNode(true);
-    dropped.style.width = PHOTO_SIZE;
-    dropped.style.height = PHOTO_SIZE;
-    var droppedPhoto = uploadedPhotoBlock.cloneNode(true);
-    uploadedPhotoBlock.remove();
-    droppedPhoto.appendChild(dropped);
-    photosContainer.appendChild(droppedPhoto);
+    uploadPhoto(evt.dataTransfer.files[0]);
   });
 
-  document.addEventListener('drop', function (evt) {
-    evt.preventDefault();
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (eventName) {
+    document.addEventListener(eventName, preventDefaults);
   });
+
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
 
   window.deleteUploads = function () {
     avatarImg.src = 'img/muffin-grey.svg';
@@ -128,5 +118,4 @@
       it.remove();
     });
   };
-
 })();

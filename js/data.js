@@ -5,6 +5,7 @@
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
   var DEBOUNCE_INTERVAL = 500;
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var lastTimeout;
   var errBlock = document.createElement('div');
   var successMessage = document.querySelector('.success');
@@ -79,6 +80,20 @@
         array[i] = tmp;
       }
       return array;
+    },
+
+    fileChooser: function (file, upload) {
+      var fileName = file.name.toLowerCase();
+      var matches = FILE_TYPES.some(function (item) {
+        return fileName.endsWith(item);
+      });
+      if (matches) {
+        var reader = new FileReader();
+        reader.addEventListener('load', function () {
+          upload.src = reader.result;
+        });
+        reader.readAsDataURL(file);
+      }
     }
   };
 
