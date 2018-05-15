@@ -16,11 +16,9 @@
     });
     if (matches) {
       var reader = new FileReader();
-
       reader.addEventListener('load', function () {
         upload.src = reader.result;
       });
-
       reader.readAsDataURL(file);
     }
   };
@@ -32,8 +30,7 @@
     avatarImg.parentNode.style.padding = '0';
   });
 
-  // dr'n'drop
-  // доб загр ф
+  // переделать нормально без повторов
   var uploadedPhotoBlock = document.querySelector('.ad-form__photo');
   var photosContainer = document.querySelector('.ad-form__photo-container');
   var dragged;
@@ -87,6 +84,43 @@
 
   photosChooser.addEventListener('change', uploadPhoto);
 
+  var dropZone = document.querySelector('.ad-form__upload');
+
+  dropZone.addEventListener('dragenter', function (evt) {
+    evt.preventDefault();
+  });
+
+  dropZone.addEventListener('dragover', function (evt) {
+    evt.preventDefault();
+    return false;
+  });
+
+  dropZone.addEventListener('drop', function (evt) {
+    evt.preventDefault();
+    var dropped = evt.dataTransfer.files[0];
+    var fileName = dropped.name.toLowerCase();
+    var matches = FILE_TYPES.some(function (item) {
+      return fileName.endsWith(item);
+    });
+    if (matches) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        dropped.src = reader.result;
+      });
+      reader.readAsDataURL(dropped);
+    }
+    dropped = avatarImg.cloneNode(true);
+    dropped.style.width = PHOTO_SIZE;
+    dropped.style.height = PHOTO_SIZE;
+    var droppedPhoto = uploadedPhotoBlock.cloneNode(true);
+    uploadedPhotoBlock.remove();
+    droppedPhoto.appendChild(dropped);
+    photosContainer.appendChild(droppedPhoto);
+  });
+
+  document.addEventListener('drop', function (evt) {
+    evt.preventDefault();
+  });
 
   window.deleteUploads = function () {
     avatarImg.src = 'img/muffin-grey.svg';

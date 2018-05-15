@@ -27,8 +27,8 @@
       window.data.filterReset();
       window.deleteUploads();
       pinMain.addEventListener('mouseup', window.map.turnActive);
-      pinMain.style.left = window.map.pinMainCoords.x + 'px';
-      pinMain.style.top = window.map.pinMainCoords.y + 'px';
+      pinMain.style.left = (window.map.pinMainCoords.x - PIN_MAIN_SIZE / 2) + 'px';
+      pinMain.style.top = (window.map.pinMainCoords.y - PIN_MAIN_SIZE - PIN_MAIN_TAIL) + 'px';
       document.querySelector('#address').value = window.map.pinMainCoords.x + ', ' + window.map.pinMainCoords.y;
     },
 
@@ -47,8 +47,6 @@
 
   };
 
-  pinMain.style.left = window.map.pinMainCoords.x + 'px';
-  pinMain.style.top = window.map.pinMainCoords.y + 'px';
   document.querySelector('#address').value = window.map.pinMainCoords.x + ', ' + window.map.pinMainCoords.y;
 
   pinMain.addEventListener('mouseup', window.map.turnActive);
