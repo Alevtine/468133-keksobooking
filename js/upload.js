@@ -86,7 +86,9 @@
   };
 
   photosChooser.addEventListener('change', function () {
-    uploadPhoto(photosChooser.files[0]);
+    for (var i = 0; i < photosChooser.files.length; i++) {
+      uploadPhoto(photosChooser.files[i]);
+    }
   });
 
   photoDropZone.addEventListener('dragenter', function (evt) {
@@ -100,7 +102,9 @@
 
   photoDropZone.addEventListener('drop', function (evt) {
     evt.preventDefault();
-    uploadPhoto(evt.dataTransfer.files[0]);
+    for (var i = 0; i < evt.dataTransfer.files.length; i++) {
+      uploadPhoto(evt.dataTransfer.files[i]);
+    }
   });
 
   ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (eventName) {
